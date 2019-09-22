@@ -8,9 +8,9 @@ defmodule Gossip.Topologies do
 			"s" => 0,
 			"w" => 1,
 			"ratio" => 0,
-			"neighbours" => {}
+			"neighbours" => []
 		}
-		actors = List.to_tuple(Enum.map(1..node_count,fn count ->
+		actors = Enum.map(0..node_count-1,fn count ->
 			%{
 				"id" => count,
 				"pid" => elem(
@@ -18,40 +18,44 @@ defmodule Gossip.Topologies do
 					Supervisor.child_spec({Gossip.Actors, properties}, id: count, shutdown: :infinity, restart: :transient)
 					),1),
 				"state" => :nil,
-				"neighbours" => {}
+				"neighbours" => []
 			}
-		end))
+		end)
 		cond do
 			topology == "full" ->
-				Enum.map(0..size(actors)-1,fn i ->
-					actor = elem(actors,i)
-					neighbours = Tuple.delete_at(actors,i)
+				List.to_tuple(Enum.map(0..length(actors)-1,fn i ->
+					actor = Enum.at(actors,i)
+					neighbours = actors -- [actor]
 					GenServer.call(actor["pid"],{:initialize,%{
 						"neighbours" => neighbours,
-						"s" => if(algorithm == "push-sum", do: elem(actor,0), else: 0)
+						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0)
 					}},:infinity)
-					actor["neighbours"] = neighbours
-				end)
+					Map.put(actor,"neighbours",Enum.map(neighbours,fn neighbour -> neighbour["id"] end))
+				end))
 		end
-		actors
 	end
 
 	def multi_call(actors,request) do
-		Enum.map(actors, fn actor->
+		Enum.map(0..tuple_size(actors)-1, fn i->
+			actor = elem(actors,i)
 			GenServer.call(actor["pid"],request,:infinity)
 		end)		
 	end
 
 	def transition_and_get_state(actors) do
-		states = Gossip.Topologies.multi_call(actors,{:transition_and_get_state})
-
+		states = multi_call(actors,{:transition_and_get_state})
+		List.to_tuple(Enum.map(0..tuple_size(actors)-1,fn i ->
+			actor = elem(actors,i)
+			Map.put(actor,"state",Enum.at(states,i))
+		end))
 	end
 
 	def terminate_actors(actors) do
 		supervisor = {Gossip.Supervisor, Node.self()}
-		Enum.each(actors,fn actor->
-			Supervisor.terminate_child(supervisor,elem(actor,0))
-			Supervisor.delete_child(supervisor,elem(actor,0))
+		Enum.each(0..tuple_size(actors)-1,fn i->
+			actor = elem(actors,i)
+			Supervisor.terminate_child(supervisor,actor["id"])
+			Supervisor.delete_child(supervisor,actor["id"])
 		end)
 	end
 end

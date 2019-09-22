@@ -1,17 +1,13 @@
 defmodule Gossip.Boss do
-	def manage(actors,states,round_count) do
-		if Enum.any?(states, fn state -> state end) do
+	def manage(actors,round_count) do
+		if Enum.any?(0..tuple_size(actors)-1, fn i -> elem(actors,i)["state"] end) do
 			Gossip.Topologies.multi_call(actors,{:send})
 		else
-			undisturbed_actors = Enum.filter(0..length(actors)-1,fn i ->
-				Enum.at(states,i) == :nil
-			end)
-			GenServer.call(elem(Enum.random(),1),{:start},:infinity)
+			GenServer.call(elem(actors,Enum.random(0..tuple_size(actors)-1))["pid"],{:set_state,:true},:infinity)
 		end
-		states = Gossip.Topologies.multi_call(actors,{:transition_and_get_state})
-		states = Gossip.Topologies.handle_isolated_actors(actors,states)
-		if Enum.any?(states, fn state -> state end) do
-			manage(actors,states,round_count+1)
+		actors = Gossip.Topologies.transition_and_get_state(actors)
+		if Enum.any?(0..tuple_size(actors)-1, fn i -> elem(actors,i)["state"] end) do
+			manage(actors,round_count+1)
 		else
 			round_count
 		end

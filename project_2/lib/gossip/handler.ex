@@ -21,7 +21,7 @@ defmodule Gossip.Handler do
 		cond do
 			properties["algorithm"] == "gossip" ->
 				rumor = :ok
-				result = GenServer.call(elem(Enum.random(properties["neighbours"]),0),{:listen,rumor},:infinity)
+				result = GenServer.call(Enum.random(properties["neighbours"])["pid"],{:listen,rumor},:infinity)
 				if result == rumor do
 					Gossip.Handler.process(rumor,properties)
 				else
@@ -32,7 +32,7 @@ defmodule Gossip.Handler do
 				properties = Map.put(properties,"w", properties["w"]/2)
 				properties = Map.put(properties,"ratio", Kernel.trunc((properties["s"]/properties["w"])*:math.pow(10,10)))
 				rumor = %{"s" => properties["s"], "w" => properties["w"]}
-				result = GenServer.call(elem(Enum.random(properties["neighbours"]),0),{:listen,rumor},:infinity)
+				result = GenServer.call(Enum.random(properties["neighbours"])["pid"],{:listen,rumor},:infinity)
 				if result == rumor do
 					Gossip.Handler.process(rumor,properties)
 				else
