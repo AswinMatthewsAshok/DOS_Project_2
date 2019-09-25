@@ -9,6 +9,22 @@ defmodule Gossip.Actors do
 		{:ok, properties}
 	end
 
+	def handle_cast({:transition_and_get_state}, properties) do
+		properties = Map.put(properties,"state",properties["next_state"])
+		send(properties["boss"],{:state, properties["id"], properties["state"]})
+		{:noreply, properties}
+	end
+
+	def handle_call({:send}, _from, properties) do
+		if properties["state"] do
+			properties = Gossip.Handler.send_rumor(properties)
+			{:reply, :ok, properties}
+		else
+			send(properties["boss"],{:ok})
+			{:reply, :ok, properties}
+		end
+	end
+
 	def handle_call({:listen, rumor}, _from, properties) do
 		if properties["state"] == :true or properties["state"] == :nil do
 			{:reply, :nil, Gossip.Handler.process(rumor,properties)}
@@ -17,22 +33,10 @@ defmodule Gossip.Actors do
 		end
 	end
 
-	def handle_call({:send}, _from, properties) do
-		if properties["state"] do
-			{:reply, :true, Gossip.Handler.send_rumor(properties)}
-		else
-			{:reply, :false, properties}
-		end
-	end
-
 	def handle_call({:set_state,value}, _from, properties) do
 		properties = Map.put(properties,"next_state",value)
+		send(properties["boss"],{:ok})
 		{:reply, :ok, properties}
-	end
-
-	def handle_call({:transition_and_get_state}, _from, properties) do
-		properties = Map.put(properties,"state",properties["next_state"])
-		{:reply, properties["state"], properties}
 	end
 
 	def handle_call({:initialize, initvar}, _from, properties) do

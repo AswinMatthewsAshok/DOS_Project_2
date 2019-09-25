@@ -18,34 +18,45 @@ defmodule Gossip.Handler do
 		end
 	end
 	def send_rumor(properties) do
+		chosen_neighbour = Enum.random(properties["neighbours"])["pid"]
 		cond do
 			properties["algorithm"] == "gossip" ->
 				rumor = :ok
-				result = GenServer.call(Enum.random(properties["neighbours"])["pid"],{:listen,rumor},:infinity)
-				if result == rumor do
-					Gossip.Handler.process(rumor,properties)
+				if chosen_neighbour != self() do
+					result = GenServer.call(chosen_neighbour,{:listen,rumor},:infinity)
+					if result == rumor do
+						Gossip.Handler.process(rumor,properties)
+					else
+						properties
+					end
 				else
-					properties
-				end 
+					Gossip.Handler.process(rumor,properties)
+				end
 			properties["algorithm"] == "push-sum" ->
 				properties = Map.put(properties,"s", properties["s"]/2)
 				properties = Map.put(properties,"w", properties["w"]/2)
 				properties = Map.put(properties,"ratio", Kernel.trunc((properties["s"]/properties["w"])*:math.pow(10,10)))
 				rumor = %{"s" => properties["s"], "w" => properties["w"]}
-				result = GenServer.call(Enum.random(properties["neighbours"])["pid"],{:listen,rumor},:infinity)
-				if result == rumor do
-					Gossip.Handler.process(rumor,properties)
+				if chosen_neighbour != self() do
+					result = GenServer.call(chosen_neighbour,{:listen,rumor},:infinity)
+					if result == rumor do
+						Gossip.Handler.process(rumor,properties)
+					else
+						properties
+					end
 				else
-					properties
+					Gossip.Handler.process(rumor,properties)
 				end
 		end
 	end
 	def initialize(initvar,properties) do
 		cond do
 			properties["algorithm"] == "gossip" ->
+				properties = Map.put(properties,"id", initvar["id"])
 				properties = Map.put(properties,"neighbours", initvar["neighbours"])
 				properties
 			properties["algorithm"] == "push-sum" ->
+				properties = Map.put(properties,"id", initvar["id"])
 				properties = Map.put(properties,"neighbours", initvar["neighbours"])
 				properties = Map.put(properties,"s", initvar["s"])
 				properties = Map.put(properties,"ratio", Kernel.trunc((properties["s"]/properties["w"])*:math.pow(10,10)))
