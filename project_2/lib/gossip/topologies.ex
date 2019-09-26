@@ -29,9 +29,10 @@ defmodule Gossip.Topologies do
 	def honeycomb_neighbours(node_count) do
 		a = ceil(:math.pow(node_count,1/2))
 		Enum.reduce(0..node_count-1,%{},fn actor_id, map1 ->
+			toggle = if(rem(a,2)!=0,do: 0,else: if(rem(div(actor_id,a),2)==0,do: 0,else: 1))
 			list = []
-			list = if(rem(actor_id+1,a) != 0,do: [actor_id+1|list],else: list)
-			list = if(rem(actor_id,2) != 0 and actor_id+a < node_count,do: [actor_id+a|list],else: list)
+			list = if(rem(actor_id+1,a) != 0 and actor_id+1 < node_count,do: [actor_id+1|list],else: list)
+			list = if(rem(actor_id+toggle,2) == 0 and actor_id+a < node_count,do: [actor_id+a|list],else: list)
 			Map.update(
 				Enum.reduce(list,map1,fn id, map2 ->
 					Map.update(map2,id,[actor_id],&([actor_id|&1]))
@@ -41,6 +42,29 @@ defmodule Gossip.Topologies do
 				&(&1++list)
 			)
 		end)
+	end
+
+	def honeycomb_rand_neighbours(node_count) do
+		neighbour_map = honeycomb_neighbours(node_count)
+		rand_unconnected = Enum.map(0..node_count-1,fn actor_id -> actor_id end)
+		{neighbour_map,_} = Enum.reduce(0..node_count,{neighbour_map,rand_unconnected},fn actor_id,{map,list} ->
+			if list == [] do
+				{map,list}
+			else
+				len = length(list)
+				list = list -- [actor_id]
+				neighbour = if(len>length(list) and len > 1,do: Enum.random(list),else: :nil)
+				if neighbour == :nil do
+					{map,list}
+				else
+					{Map.update(
+						Map.update(map,actor_id,[neighbour],&([neighbour|&1])),
+						neighbour,[actor_id],&([actor_id|&1])
+						),list--[neighbour]}
+				end
+			end
+		end)
+		neighbour_map
 	end
 
 	def build_topology(topology,node_count,algorithm) do
@@ -94,6 +118,19 @@ defmodule Gossip.Topologies do
 				end))
 			topology == "honeycomb" ->
 				neighbour_map = honeycomb_neighbours(node_count)
+				IO.inspect(neighbour_map)
+				List.to_tuple(Enum.map(0..node_count-1,fn i ->
+					actor = Enum.at(actors,i)
+					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
+					GenServer.call(actor["pid"],{:initialize,%{
+						"id" => i,
+						"neighbours" => neighbours,
+						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0)
+					}},:infinity)
+					Map.put(actor,"neighbours",neighbour_map[actor["id"]])
+				end))
+			topology == "randhoneycomb" ->
+				neighbour_map = honeycomb_rand_neighbours(node_count)
 				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
