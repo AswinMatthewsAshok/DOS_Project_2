@@ -105,7 +105,6 @@ defmodule Gossip.Topologies do
 				end))
 			topology == "3Dtorus" ->
 				neighbour_map = torus_3d_neighbours(node_count)
-				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
@@ -118,7 +117,6 @@ defmodule Gossip.Topologies do
 				end))
 			topology == "honeycomb" ->
 				neighbour_map = honeycomb_neighbours(node_count)
-				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
@@ -131,7 +129,6 @@ defmodule Gossip.Topologies do
 				end))
 			topology == "randhoneycomb" ->
 				neighbour_map = honeycomb_rand_neighbours(node_count)
-				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
