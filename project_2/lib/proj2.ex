@@ -2,22 +2,28 @@ defmodule Gossip.Proj2 do
 	def check_args(args) do
 		if length(args) == 3 do
 			[numNodes, topology, algorithm] = args
-			numNodes = String.to_integer(numNodes)
-			if is_integer(numNodes) and numNodes > 0 do
-				if Enum.member?(["full", "line", "rand2D", "3Dtorus", "honeycomb" , "randhoneycomb"], topology) do
-					if Enum.member?(["gossip", "push-sum"], algorithm) do
-						true
+			try do
+				numNodes = String.to_integer(numNodes)
+				if is_integer(numNodes) and numNodes > 0 do
+					if Enum.member?(["full", "line", "rand2D", "3Dtorus", "honeycomb" , "randhoneycomb"], topology) do
+						if Enum.member?(["gossip", "push-sum"], algorithm) do
+							true
+						else
+							IO.puts("Invalid algorithm")
+							false
+						end
 					else
-						IO.puts("Invalid algorithm")
+						IO.puts("Invalid topology")
 						false
 					end
 				else
-					IO.puts("Invalid topology")
+					IO.puts("Invalid number of nodes")
 					false
 				end
-			else
-				IO.puts("Invalid number of nodes")
-				false
+			rescue
+				ArgumentError -> 
+					IO.puts("Invalid number of nodes")
+					false
 			end
 		else
 			IO.puts("Invalid number of arguments")
