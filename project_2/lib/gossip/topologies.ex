@@ -26,6 +26,33 @@ defmodule Gossip.Topologies do
 		end)
 	end
 
+	def random_2d_neighbours(node_count) do
+		random_list = 0..node_count
+		coord_map = Enum.reduce(0..node_count-1, %{}, fn actor_id , map1 ->
+			Map.put(map1,actor_id,{Enum.random(random_list)/node_count,Enum.random(random_list)/node_count})
+		end)
+		Enum.reduce(0..node_count-1, %{}, fn actor_id_1, map2 ->
+			list = if(actor_id_1 != node_count-1,
+				do:
+				Enum.filter(actor_id_1+1..node_count-1, fn actor_id_2 ->
+					{x1,y1} = coord_map[actor_id_1]
+					{x2,y2} = coord_map[actor_id_2]
+					distance = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)
+					distance <= 0.01
+				end),
+				else: []
+			)
+			Map.update(
+				Enum.reduce(list,map2,fn id, map3 ->
+					Map.update(map3,id,[actor_id_1],&([actor_id_1|&1]))
+				end),
+				actor_id_1,
+				list,
+				&(&1++list)
+			)
+		end)
+	end
+
 	def honeycomb_neighbours(node_count) do
 		a = ceil(:math.pow(node_count,1/2))
 		Enum.reduce(0..node_count-1,%{},fn actor_id, map1 ->
@@ -102,6 +129,38 @@ defmodule Gossip.Topologies do
 						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0)
 					}},:infinity)
 					Map.put(actor,"neighbours",Enum.map(neighbours,fn neighbour -> neighbour["id"] end))
+				end))
+			topology == "line" ->
+				List.to_tuple(Enum.map(0..node_count-1,fn i ->
+					actor = Enum.at(actors,i)
+					neighbours = if(i==0,
+						do: [Enum.at(actors,i+1)], 
+						else: if(i>0 and i<node_count-1,
+							do: [Enum.at(actors,i-1), Enum.at(actors, i+1)],
+							else: if(i == node_count-1,
+								do: [Enum.at(actors,i-1)],
+								else: []
+								)
+							)
+						)
+					GenServer.call(actor["pid"],{:initialize,%{
+						"id" => i,
+						"neighbours" => neighbours,
+						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0)
+					}},:infinity)
+					Map.put(actor,"neighbours",Enum.map(neighbours,fn neighbour -> neighbour["id"] end))
+				end))
+			topology == "rand2D" ->
+				neighbour_map = random_2d_neighbours(node_count)
+				List.to_tuple(Enum.map(0..node_count-1,fn i ->
+					actor = Enum.at(actors,i)
+					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
+					GenServer.call(actor["pid"],{:initialize,%{
+						"id" => i,
+						"neighbours" => neighbours,
+						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0)
+					}},:infinity)
+					Map.put(actor,"neighbours",neighbour_map[actor["id"]])
 				end))
 			topology == "3Dtorus" ->
 				neighbour_map = torus_3d_neighbours(node_count)
