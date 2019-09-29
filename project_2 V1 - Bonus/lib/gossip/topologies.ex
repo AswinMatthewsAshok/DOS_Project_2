@@ -1,5 +1,37 @@
 defmodule Gossip.Topologies do
-	def torus_3d_neighbours(node_count) do
+	def full_neighbours(node_count,failure_rate,failure_type) do
+		all_actors = Enum.map(0..node_count-1,fn id -> id end)
+		{neighbour_map,_} = Enum.reduce(0..node_count-1,{%{},all_actors},fn actor_id, {map1,all} ->
+			list = all -- [actor_id]
+			list = if(failure_type == "connection",do: Enum.filter(list,fn _ -> Enum.random(1..100)>failure_rate end),else: list)
+			{Map.update(
+				Enum.reduce(list,map1,fn id, map2 ->
+					Map.update(map2,id,[actor_id],&([actor_id|&1]))
+				end),
+				actor_id,
+				list,
+				&(&1++list)
+			),list}
+		end)
+		neighbour_map
+	end
+
+	def line_neighbours(node_count,failure_rate,failure_type) do
+		Enum.reduce(0..node_count-1,%{},fn actor_id, map1 ->
+			list = if(actor_id+1 == node_count, do: [], else: [actor_id+1])
+			list = if(failure_type == "connection",do: Enum.filter(list,fn _ -> Enum.random(1..100)>failure_rate end),else: list)
+			Map.update(
+				Enum.reduce(list,map1,fn id, map2 ->
+					Map.update(map2,id,[actor_id],&([actor_id|&1]))
+				end),
+				actor_id,
+				list,
+				&(&1++list)
+			)
+		end)
+	end
+
+	def torus_3d_neighbours(node_count,failure_rate,failure_type) do
 		a = ceil(:math.pow(node_count,1/3))
 		asquare = a*a
 		acube = a*a*a
@@ -15,6 +47,7 @@ defmodule Gossip.Topologies do
 					do: actor_id-div(actor_id,asquare)*asquare,
 					else: actor_id + asquare)
 			]
+			list = if(failure_type == "connection",do: Enum.filter(list,fn _ -> Enum.random(1..100)>failure_rate end),else: list)
 			Map.update(
 				Enum.reduce(list,map1,fn id, map2 ->
 					Map.update(map2,id,[actor_id],&([actor_id|&1]))
@@ -26,7 +59,7 @@ defmodule Gossip.Topologies do
 		end)
 	end
 
-	def random_2d_neighbours(node_count) do
+	def random_2d_neighbours(node_count,failure_rate,failure_type) do
 		random_list = 0..node_count
 		coord_map = Enum.reduce(0..node_count-1, %{}, fn actor_id , map1 ->
 			Map.put(map1,actor_id,{Enum.random(random_list)/node_count,Enum.random(random_list)/node_count})
@@ -42,6 +75,7 @@ defmodule Gossip.Topologies do
 				end),
 				else: []
 			)
+			list = if(failure_type == "connection",do: Enum.filter(list,fn _ -> Enum.random(1..100)>failure_rate end),else: list)
 			Map.update(
 				Enum.reduce(list,map2,fn id, map3 ->
 					Map.update(map3,id,[actor_id_1],&([actor_id_1|&1]))
@@ -53,13 +87,14 @@ defmodule Gossip.Topologies do
 		end)
 	end
 
-	def honeycomb_neighbours(node_count) do
+	def honeycomb_neighbours(node_count,failure_rate,failure_type) do
 		a = ceil(:math.pow(node_count,1/2))
 		Enum.reduce(0..node_count-1,%{},fn actor_id, map1 ->
 			toggle = if(rem(a,2)!=0,do: 0,else: if(rem(div(actor_id,a),2)==0,do: 0,else: 1))
 			list = []
 			list = if(rem(actor_id+1,a) != 0 and actor_id+1 < node_count,do: [actor_id+1|list],else: list)
 			list = if(rem(actor_id+toggle,2) == 0 and actor_id+a < node_count,do: [actor_id+a|list],else: list)
+			list = if(failure_type == "connection",do: Enum.filter(list,fn _ -> Enum.random(1..100)>failure_rate end),else: list)
 			Map.update(
 				Enum.reduce(list,map1,fn id, map2 ->
 					Map.update(map2,id,[actor_id],&([actor_id|&1]))
@@ -71,8 +106,8 @@ defmodule Gossip.Topologies do
 		end)
 	end
 
-	def honeycomb_rand_neighbours(node_count) do
-		neighbour_map = honeycomb_neighbours(node_count)
+	def honeycomb_rand_neighbours(node_count,failure_rate,failure_type) do
+		neighbour_map = honeycomb_neighbours(node_count,failure_rate,failure_type)
 		rand_unconnected = Enum.map(0..node_count-1,fn actor_id -> actor_id end)
 		{neighbour_map,_} = Enum.reduce(0..node_count,{neighbour_map,rand_unconnected},fn actor_id,{map,list} ->
 			if list == [] do
@@ -84,18 +119,23 @@ defmodule Gossip.Topologies do
 				if neighbour == :nil do
 					{map,list}
 				else
-					{Map.update(
-						Map.update(map,actor_id,[neighbour],&([neighbour|&1])),
-						neighbour,[actor_id],&([actor_id|&1])
-						),list--[neighbour]}
+					{
+						if(failure_type == "connection" and Enum.random(1..100)>failure_rate, 
+							do:
+							Map.update(
+								Map.update(map,actor_id,[neighbour],&([neighbour|&1])),
+								neighbour,[actor_id],&([actor_id|&1])
+								),
+							else: map),
+						list--[neighbour]
+					}
 				end
 			end
 		end)
 		neighbour_map
 	end
 
-	def build_topology(topology,node_count,algorithm) do
-		success_rate = 10
+	def build_topology(topology,node_count,algorithm,failure_rate,failure_type) do
 		properties = %{
 			"id" => 0,
 			"state" => "unaware",
@@ -106,7 +146,9 @@ defmodule Gossip.Topologies do
 			"ratio" => 0,
 			"neighbours" => [],
 			"valid_neighbours" => [],
-			"boss" => self()
+			"boss" => self(),
+			"failure_rate" => failure_rate,
+			"failure_type" => failure_type,
 		}
 		actors = Enum.map(0..node_count-1,fn count ->
 			%{
@@ -121,48 +163,44 @@ defmodule Gossip.Topologies do
 		end)
 		cond do
 			topology == "full" ->
+				neighbour_map = full_neighbours(node_count,failure_rate,failure_type)
+				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
-					neighbours = actors -- [actor]
-					state = if(Enum.random(1..10)<=success_rate,do: "unaware",else: "unknown")
-					GenServer.call(actor["pid"],{:initialize,%{
-						"id" => i,
-						"neighbours" => neighbours,
-						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0),
-						"state"=> state
-					}},:infinity)
-					actor = Map.put(actor,"neighbours",Enum.map(neighbours,fn neighbour -> neighbour["id"] end))
-					Map.put(actor,"state",state)
-				end))
-			topology == "line" ->
-				List.to_tuple(Enum.map(0..node_count-1,fn i ->
-					actor = Enum.at(actors,i)
-					neighbours = if(i==0,
-						do: [Enum.at(actors,i+1)], 
-						else: if(i>0 and i<node_count-1,
-							do: [Enum.at(actors,i-1), Enum.at(actors, i+1)],
-							else: if(i == node_count-1,
-								do: [Enum.at(actors,i-1)],
-								else: []
-								)
-							)
-						)
-					state = if(Enum.random(1..10)<=success_rate,do: "unaware",else: "unknown")
+					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
+					state = "unaware"
 					GenServer.call(actor["pid"],{:initialize,%{
 						"id" => i,
 						"neighbours" => neighbours,
 						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0),
 						"state"=>state
 					}},:infinity)
-					actor = Map.put(actor,"neighbours",Enum.map(neighbours,fn neighbour -> neighbour["id"] end))
+					actor = Map.put(actor,"neighbours",neighbour_map[actor["id"]])
 					Map.put(actor,"state",state)
 				end))
-			topology == "rand2D" ->
-				neighbour_map = random_2d_neighbours(node_count)
+			topology == "line" ->
+				neighbour_map = line_neighbours(node_count,failure_rate,failure_type)
+				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
-					state = if(Enum.random(1..10)<=success_rate,do: "unaware",else: "unknown")
+					state = "unaware"
+					GenServer.call(actor["pid"],{:initialize,%{
+						"id" => i,
+						"neighbours" => neighbours,
+						"s" => if(algorithm == "push-sum", do: actor["id"], else: 0),
+						"state"=>state
+					}},:infinity)
+					actor = Map.put(actor,"neighbours",neighbour_map[actor["id"]])
+					Map.put(actor,"state",state)
+				end))
+			topology == "rand2D" ->
+				neighbour_map = random_2d_neighbours(node_count,failure_rate,failure_type)
+				IO.inspect(neighbour_map)
+				List.to_tuple(Enum.map(0..node_count-1,fn i ->
+					actor = Enum.at(actors,i)
+					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
+					state = "unaware"
 					GenServer.call(actor["pid"],{:initialize,%{
 						"id" => i,
 						"neighbours" => neighbours,
@@ -173,11 +211,12 @@ defmodule Gossip.Topologies do
 					Map.put(actor,"state",state)
 				end))
 			topology == "3Dtorus" ->
-				neighbour_map = torus_3d_neighbours(node_count)
+				neighbour_map = torus_3d_neighbours(node_count,failure_rate,failure_type)
+				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
-					state = if(Enum.random(1..10)<=success_rate,do: "unaware",else: "unknown")
+					state = "unaware"
 					GenServer.call(actor["pid"],{:initialize,%{
 						"id" => i,
 						"neighbours" => neighbours,
@@ -188,11 +227,12 @@ defmodule Gossip.Topologies do
 					Map.put(actor,"state",state)
 				end))
 			topology == "honeycomb" ->
-				neighbour_map = honeycomb_neighbours(node_count)
+				neighbour_map = honeycomb_neighbours(node_count,failure_rate,failure_type)
+				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
-					state = if(Enum.random(1..10)<=success_rate,do: "unaware",else: "unknown")
+					state = "unaware"
 					GenServer.call(actor["pid"],{:initialize,%{
 						"id" => i,
 						"neighbours" => neighbours,
@@ -203,11 +243,12 @@ defmodule Gossip.Topologies do
 					Map.put(actor,"state",state)
 				end))
 			topology == "randhoneycomb" ->
-				neighbour_map = honeycomb_rand_neighbours(node_count)
+				neighbour_map = honeycomb_rand_neighbours(node_count,failure_rate,failure_type)
+				IO.inspect(neighbour_map)
 				List.to_tuple(Enum.map(0..node_count-1,fn i ->
 					actor = Enum.at(actors,i)
 					neighbours = Enum.map(neighbour_map[actor["id"]],fn id -> Enum.at(actors,id) end)
-					state = if(Enum.random(1..10)<=success_rate,do: "unaware",else: "unknown")
+					state = "unaware"
 					GenServer.call(actor["pid"],{:initialize,%{
 						"id" => i,
 						"neighbours" => neighbours,

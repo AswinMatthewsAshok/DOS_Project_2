@@ -12,9 +12,20 @@ defmodule Gossip.Actors do
 	def handle_info({:send}, properties) do
 		cond do
 			properties["state"] == "alive" ->
-				properties = Gossip.Handler.send_rumor(properties)
-				Process.send_after(self(),{:send},10)
-				{:noreply, properties}
+				if properties["failure_type"] == "node" do
+					if Enum.random(1..100) > properties["failure_rate"] do
+						properties = Gossip.Handler.send_rumor(properties)
+						Process.send_after(self(),{:send},10)
+						{:noreply, properties}
+					else
+						properties = Map.put(properties,"state","unaware")
+						{:noreply, properties}
+					end
+				else
+					properties = Gossip.Handler.send_rumor(properties)
+					Process.send_after(self(),{:send},10)
+					{:noreply, properties}
+				end
 			true ->
 				{:noreply, properties}
 		end
