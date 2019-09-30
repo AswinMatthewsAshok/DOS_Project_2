@@ -12,20 +12,9 @@ defmodule Gossip.Actors do
 	def handle_info({:send}, properties) do
 		cond do
 			properties["state"] == "alive" ->
-				if properties["failure_type"] == "node" do
-					if Enum.random(1..100) > properties["failure_rate"] do
-						properties = Gossip.Handler.send_rumor(properties)
-						Process.send_after(self(),{:send},10)
-						{:noreply, properties}
-					else
-						properties = Map.put(properties,"state","unaware")
-						{:noreply, properties}
-					end
-				else
-					properties = Gossip.Handler.send_rumor(properties)
-					Process.send_after(self(),{:send},10)
-					{:noreply, properties}
-				end
+				properties = Gossip.Handler.send_rumor(properties)
+				Process.send_after(self(),{:send},10)
+				{:noreply, properties}
 			true ->
 				{:noreply, properties}
 		end
@@ -43,8 +32,18 @@ defmodule Gossip.Actors do
 		end
 		cond do
 			properties["state"] == "alive" or properties["state"] == "unaware" ->
-				properties = Gossip.Handler.process(rumor,properties)
-				{:noreply, properties}
+				if properties["failure_type"] == "node" and properties["state"] == "unaware" do
+					if Enum.random(1..100) > properties["failure_rate"] do
+						properties = Gossip.Handler.process(rumor,properties)
+						{:noreply, properties}
+					else
+						properties = Map.put(properties,"state","unknown")
+						{:noreply, properties}
+					end
+				else
+					properties = Gossip.Handler.process(rumor,properties)
+					{:noreply, properties}
+				end
 			properties["state"] == "dead" ->
 				GenServer.cast(from,{:bounced, rumor, self()})
 				{:noreply, properties}
