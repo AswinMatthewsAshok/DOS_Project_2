@@ -1,0 +1,447 @@
+Generated escript project2 with MIX_ENV=dev
+Algorithm: gossip
+Topology: full
+Node count: 5
+185
+172
+155
+159
+163
+Node count: 10
+177
+158
+154
+339
+145
+Node count: 50
+207
+199
+233
+231
+310
+Node count: 100
+222
+231
+222
+247
+229
+Node count: 500
+605
+538
+550
+544
+563
+Node count: 1000
+1911
+1891
+1809
+1829
+1773
+Topology: line
+Node count: 5
+114
+96
+126
+108
+135
+Node count: 10
+175
+192
+174
+204
+260
+Node count: 50
+298
+305
+247
+288
+320
+Node count: 100
+893
+430
+783
+571
+1195
+Node count: 500
+2936
+1951
+1614
+1998
+2073
+Node count: 1000
+4258
+3608
+3750
+5538
+5090
+Topology: rand2D
+Node count: 5
+75
+61
+161
+72
+81
+Node count: 10
+167
+132
+233
+175
+703
+Node count: 50
+2403
+1365
+1289
+1503
+1555
+Node count: 100
+2388
+1207
+1840
+1935
+1806
+Node count: 500
+334
+326
+315
+283
+292
+Node count: 1000
+303
+296
+333
+475
+329
+Topology: 3Dtorus
+Node count: 5
+175
+211
+233
+134
+156
+Node count: 10
+286
+190
+165
+201
+269
+Node count: 50
+181
+172
+200
+228
+346
+Node count: 100
+193
+185
+333
+191
+183
+Node count: 500
+241
+229
+217
+242
+233
+Node count: 1000
+276
+271
+267
+270
+249
+Topology: honeycomb
+Node count: 5
+113
+139
+130
+113
+128
+Node count: 10
+166
+145
+318
+159
+138
+Node count: 50
+192
+211
+210
+211
+201
+Node count: 100
+240
+247
+259
+207
+274
+Node count: 500
+369
+373
+562
+372
+296
+Node count: 1000
+555
+532
+445
+489
+495
+Topology: randhoneycomb
+Node count: 5
+144
+174
+129
+129
+166
+Node count: 10
+155
+199
+172
+186
+193
+Node count: 50
+196
+206
+186
+196
+555
+Node count: 100
+217
+201
+202
+199
+201
+Node count: 500
+213
+215
+223
+223
+226
+Node count: 1000
+254
+252
+416
+227
+229
+Algorithm: push-sum
+Topology: full
+Node count: 5
+254
+353
+208
+328
+118
+Node count: 10
+660
+643
+619
+554
+706
+Node count: 50
+770
+827
+801
+866
+1247
+Node count: 100
+994
+848
+1305
+1250
+815
+Node count: 500
+3395
+3545
+3569
+3712
+4129
+Node count: 1000
+16156
+16958
+16308
+16251
+16131
+Topology: line
+Node count: 5
+1120
+244
+154
+129
+426
+Node count: 10
+5596
+2181
+1089
+2370
+2194
+Node count: 50
+2699
+1085
+2909
+2652
+3983
+Node count: 100
+7106
+3851
+6865
+4797
+6371
+Node count: 500
+15317
+11007
+10054
+6220
+4955
+Node count: 1000
+12723
+37728
+12044
+29967
+24979
+Topology: rand2D
+Node count: 5
+133
+62
+82
+62
+106
+Node count: 10
+147
+245
+146
+117
+164
+Node count: 50
+2829
+1505
+2985
+3161
+2863
+Node count: 100
+18016
+10635
+8110
+7535
+7774
+Node count: 500
+10669
+8251
+7904
+33901
+5960
+Node count: 1000
+48995
+37125
+45281
+35919
+47139
+Topology: 3Dtorus
+Node count: 5
+117
+305
+198
+168
+238
+Node count: 10
+173
+149
+319
+172
+146
+Node count: 50
+622
+2058
+1584
+1442
+1956
+Node count: 100
+2298
+2184
+2206
+2039
+2230
+Node count: 500
+5281
+4730
+5084
+4859
+5003
+Node count: 1000
+11100
+10178
+10001
+10250
+10375
+Topology: honeycomb
+Node count: 5
+353
+2223
+635
+224
+246
+Node count: 10
+679
+333
+405
+1357
+1284
+Node count: 50
+1930
+6659
+3767
+9678
+5771
+Node count: 100
+5267
+18849
+9418
+11997
+4961
+Node count: 500
+13653
+12332
+16495
+13298
+16797
+Node count: 1000
+48659
+57364
+30014
+28273
+57394
+Topology: randhoneycomb
+Node count: 5
+822
+520
+626
+907
+713
+Node count: 10
+948
+1222
+541
+157
+539
+Node count: 50
+812
+3898
+3755
+2914
+2942
+Node count: 100
+3765
+3298
+4038
+3831
+3902
+Node count: 500
+5117
+4869
+5681
+4183
+4785
+Node count: 1000
+4916
+5996
+6178
+6270
+6127

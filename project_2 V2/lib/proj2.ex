@@ -1,4 +1,4 @@
-defmodule Gossip.Proj2 do
+defmodule Proj2 do
 	def check_args(args) do
 		if length(args) == 3 do
 			[numNodes, topology, algorithm] = args

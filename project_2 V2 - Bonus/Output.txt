@@ -1,0 +1,1039 @@
+Generated escript project2 with MIX_ENV=dev
+Failure Type: node
+Algorithm: gossip
+Topology: full
+Failure Rate: 0
+2176
+1892
+2078
+1838
+1915
+Failure Rate: 5
+2502
+2695
+2330
+2751
+2215
+Failure Rate: 10
+2563
+4414
+3876
+3261
+3252
+Failure Rate: 15
+2942
+5313
+3773
+3548
+4499
+Failure Rate: 20
+5817
+4380
+5782
+4678
+4941
+Failure Rate: 25
+6850
+6370
+7152
+6626
+6575
+Failure Rate: 30
+7000
+6946
+7485
+6784
+8081
+Topology: line
+Failure Rate: 0
+4430
+4291
+5685
+6958
+3463
+Failure Rate: 5
+9654
+11758
+11348
+12972
+12988
+Failure Rate: 10
+16033
+19594
+17954
+17736
+18581
+Failure Rate: 15
+23836
+27719
+24381
+26594
+26700
+Failure Rate: 20
+33822
+33130
+36518
+30126
+35987
+Failure Rate: 25
+45298
+41957
+44522
+48785
+47430
+Failure Rate: 30
+54179
+48300
+60532
+53468
+52836
+Topology: rand2D
+Failure Rate: 0
+320
+342
+286
+287
+337
+Failure Rate: 5
+3858
+4966
+6069
+6225
+5323
+Failure Rate: 10
+7488
+6795
+6869
+6310
+7027
+Failure Rate: 15
+7080
+7466
+6662
+9469
+8628
+Failure Rate: 20
+10443
+10377
+12354
+10126
+10633
+Failure Rate: 25
+10104
+11532
+12207
+9516
+11690
+Failure Rate: 30
+10809
+10622
+12906
+11245
+13374
+Topology: 3Dtorus
+Failure Rate: 0
+266
+258
+542
+279
+268
+Failure Rate: 5
+3691
+4297
+3909
+2641
+2826
+Failure Rate: 10
+5863
+4519
+5518
+4925
+5952
+Failure Rate: 15
+4007
+5613
+6607
+4360
+6048
+Failure Rate: 20
+4567
+6984
+7023
+4252
+6007
+Failure Rate: 25
+7972
+6667
+6233
+6668
+5986
+Failure Rate: 30
+7879
+8738
+10009
+6150
+6301
+Topology: honeycomb
+Failure Rate: 0
+521
+502
+969
+692
+489
+Failure Rate: 5
+1133
+1746
+1324
+1535
+1663
+Failure Rate: 10
+1970
+2222
+2565
+2347
+2558
+Failure Rate: 15
+3211
+3130
+2898
+2477
+4005
+Failure Rate: 20
+5419
+3636
+3256
+5008
+3711
+Failure Rate: 25
+6612
+3645
+6266
+3770
+6115
+Failure Rate: 30
+8026
+6622
+7100
+7262
+8371
+Topology: randhoneycomb
+Failure Rate: 0
+835
+364
+780
+458
+558
+Failure Rate: 5
+1108
+1379
+1450
+1555
+1397
+Failure Rate: 10
+2377
+2854
+2405
+2018
+2291
+Failure Rate: 15
+3008
+3323
+3744
+3821
+4391
+Failure Rate: 20
+3280
+3727
+3702
+3779
+4086
+Failure Rate: 25
+6787
+4361
+3719
+6098
+5663
+Failure Rate: 30
+6523
+7632
+7448
+6941
+5708
+Algorithm: push-sum
+Topology: full
+Failure Rate: 0
+13491
+13664
+13842
+13720
+13807
+Failure Rate: 5
+14723
+14053
+14532
+14270
+14894
+Failure Rate: 10
+15558
+14313
+15262
+14762
+15122
+Failure Rate: 15
+15306
+17033
+14902
+15072
+16905
+Failure Rate: 20
+17375
+16342
+16109
+17002
+16082
+Failure Rate: 25
+18247
+17177
+19326
+17139
+17402
+Failure Rate: 30
+17751
+21132
+18595
+17579
+18214
+Topology: line
+Failure Rate: 0
+14179
+34783
+10569
+31177
+21702
+Failure Rate: 5
+29812
+14723
+26972
+33394
+40546
+Failure Rate: 10
+37223
+39569
+22879
+28849
+28253
+Failure Rate: 15
+28492
+39808
+49130
+37039
+32794
+Failure Rate: 20
+50071
+49154
+51543
+49736
+38462
+Failure Rate: 25
+60111
+53823
+70097
+60402
+60093
+Failure Rate: 30
+66614
+66112
+66035
+74931
+75243
+Topology: rand2D
+Failure Rate: 0
+51479
+47480
+43588
+45054
+42655
+Failure Rate: 5
+59361
+43641
+42451
+64753
+54421
+Failure Rate: 10
+52443
+59277
+47355
+51869
+43832
+Failure Rate: 15
+45489
+48997
+56124
+56882
+24098
+Failure Rate: 20
+41196
+46515
+46291
+45737
+55496
+Failure Rate: 25
+49487
+46535
+55358
+40195
+44909
+Failure Rate: 30
+49017
+48939
+46606
+43386
+40647
+Topology: 3Dtorus
+Failure Rate: 0
+10826
+10963
+10633
+11123
+11520
+Failure Rate: 5
+11481
+11210
+11061
+10936
+10842
+Failure Rate: 10
+10905
+10799
+11297
+12679
+10910
+Failure Rate: 15
+11161
+10780
+11246
+11439
+11585
+Failure Rate: 20
+11581
+11848
+11360
+11508
+10847
+Failure Rate: 25
+11482
+11126
+11571
+10176
+11091
+Failure Rate: 30
+11590
+11795
+11477
+12034
+11675
+Topology: honeycomb
+Failure Rate: 0
+66273
+46276
+43508
+66680
+26830
+Failure Rate: 5
+52683
+42932
+47157
+26866
+34738
+Failure Rate: 10
+35049
+49109
+45263
+39869
+30624
+Failure Rate: 15
+27714
+29584
+25304
+32160
+38521
+Failure Rate: 20
+37942
+33204
+44811
+35708
+37151
+Failure Rate: 25
+31415
+24247
+32280
+31320
+51029
+Failure Rate: 30
+26035
+38620
+52508
+42949
+35372
+Topology: randhoneycomb
+Failure Rate: 0
+38602
+46499
+39272
+39793
+32682
+Failure Rate: 5
+25325
+43716
+33846
+36005
+32872
+Failure Rate: 10
+35240
+40397
+42184
+32497
+34373
+Failure Rate: 15
+30538
+46552
+48892
+39406
+26707
+Failure Rate: 20
+34858
+34080
+36545
+40821
+31996
+Failure Rate: 25
+37894
+45200
+54352
+28705
+22680
+Failure Rate: 30
+38708
+32198
+45217
+30723
+39307
+Failure Type: connection
+Algorithm: gossip
+Topology: full
+Failure Rate: 0
+1752
+1753
+1728
+1754
+1756
+Failure Rate: 5
+75972
+75522
+76467
+75315
+72963
+Failure Rate: 10
+69315
+66701
+69281
+68938
+67443
+Failure Rate: 15
+63458
+57605
+57004
+55961
+59992
+Failure Rate: 20
+54280
+48464
+49142
+59918
+50647
+Failure Rate: 25
+41308
+45201
+42312
+38601
+44981
+Failure Rate: 30
+37743
+37766
+38823
+38726
+38338
+Topology: line
+Failure Rate: 0
+5829
+3065
+3955
+5733
+3135
+Failure Rate: 5
+12343
+10212
+11656
+11548
+10972
+Failure Rate: 10
+16461
+16613
+14741
+16048
+15404
+Failure Rate: 15
+20174
+20351
+20746
+22504
+20375
+Failure Rate: 20
+22608
+23903
+24793
+26754
+27720
+Failure Rate: 25
+26679
+26912
+27374
+25703
+30447
+Failure Rate: 30
+30260
+31728
+30044
+29243
+29210
+Topology: rand2D
+Failure Rate: 0
+795
+384
+318
+304
+299
+Failure Rate: 5
+324
+300
+291
+285
+314
+Failure Rate: 10
+387
+347
+323
+312
+339
+Failure Rate: 15
+315
+323
+294
+306
+332
+Failure Rate: 20
+299
+304
+307
+467
+347
+Failure Rate: 25
+306
+321
+304
+461
+331
+Failure Rate: 30
+292
+303
+284
+337
+276
+Topology: 3Dtorus
+Failure Rate: 0
+251
+265
+239
+245
+252
+Failure Rate: 5
+305
+619
+275
+257
+281
+Failure Rate: 10
+260
+263
+261
+708
+274
+Failure Rate: 15
+269
+346
+291
+259
+275
+Failure Rate: 20
+274
+283
+260
+276
+272
+Failure Rate: 25
+323
+298
+811
+422
+251
+Failure Rate: 30
+265
+290
+282
+256
+285
+Topology: honeycomb
+Failure Rate: 0
+487
+690
+460
+371
+469
+Failure Rate: 5
+492
+507
+444
+467
+439
+Failure Rate: 10
+635
+1010
+579
+1020
+689
+Failure Rate: 15
+792
+926
+626
+1131
+885
+Failure Rate: 20
+1475
+2125
+1600
+1911
+1423
+Failure Rate: 25
+1404
+3582
+3298
+3094
+2344
+Failure Rate: 30
+5772
+4889
+6142
+6661
+4114
+Topology: randhoneycomb
+Failure Rate: 0
+232
+254
+243
+234
+223
+Failure Rate: 5
+232
+445
+246
+238
+442
+Failure Rate: 10
+282
+240
+250
+244
+238
+Failure Rate: 15
+270
+261
+255
+252
+564
+Failure Rate: 20
+422
+594
+307
+379
+470
+Failure Rate: 25
+386
+400
+489
+429
+578
+Failure Rate: 30
+649
+602
+1293
+899
+695
+Algorithm: push-sum
+Topology: full
+Failure Rate: 0
+14076
+14008
+13470
+13849
+15155
+Failure Rate: 5
+17902
+17425
+18370
+16680
+19635
+Failure Rate: 10
+25163
+23503
+24524
+21981
+24193
+Failure Rate: 15
+23431
+28391
+23484
+23107
+27566
+Failure Rate: 20
+31313
+24696
+25417
+25235
+27936
+Failure Rate: 25
+27891
+26947
+29341
+26899
+25367
+Failure Rate: 30
+27510
+26377
+22453
+30140
+25172
+Topology: line
+Failure Rate: 0
+28639
+26732
+33371
+36885
+24391
+Failure Rate: 5
+67999
+58998
+66190
+73120
+62389
+Failure Rate: 10
+75507
+70196
+75059
+75076
+58583
+Failure Rate: 15
+77668
+66493
+77236
+68346
+72906
+Failure Rate: 20
+73683
+82305
+72351
+74236
+82731
+Failure Rate: 25
+82580
+69922
+71777
+70599
+73649
+Failure Rate: 30
+78197
+71201
+74352
+73081
+78960
+Topology: rand2D
+Failure Rate: 0
+37742
+41249
+44601
+48684
+47628
+Failure Rate: 5
+52791
+45938
+43779
+45973
+52863
+Failure Rate: 10
+47168
+3913
+34742
+44289
+37548
+Failure Rate: 15
+38842
+47873
+47230
+43288
+47136
+Failure Rate: 20
+46772
+43397
+40663
+42004
+42244
+Failure Rate: 25
+44299
+45047
+37403
+43906
+46212
+Failure Rate: 30
+38435
+47583
+51707
+50107
+46448
+Topology: 3Dtorus
+Failure Rate: 0
+10553
+10584
+10253
+10966
+10779
+Failure Rate: 5
+11207
+11249
+11609
+11053
+11087
+Failure Rate: 10
+10946
+10936
+10511
+10593
+10492
+Failure Rate: 15
+11935
+15543
+10661
+11367
+13611
+Failure Rate: 20
+10243
+8011
+13225
+12803
+15022
+Failure Rate: 25
+12881
+14208
+8286
+13469
+12582
+Failure Rate: 30
+12973
+10579
+12340
+15074
+5715
+Topology: honeycomb
+Failure Rate: 0
+36334
+40325
+46960
+51157
+46996
+Failure Rate: 5
+39726
+38040
+31168
+27375
+28870
+Failure Rate: 10
+13914
+12392
+18456
+17944
+16935
+Failure Rate: 15
+11679
+19551
+12602
+9962
+14835
+Failure Rate: 20
+13227
+11829
+14090
+15984
+8872
+Failure Rate: 25
+9308
+7998
+10101
+9488
+21482
+Failure Rate: 30
+18061
+23564
+26620
+22156
+14419
+Topology: randhoneycomb
+Failure Rate: 0
+4972
+5724
+5591
+6793
+6354
+Failure Rate: 5
+7052
+7299
+7712
+7318
+7001
+Failure Rate: 10
+7408
+8141
+8520
+12417
+8575
+Failure Rate: 15
+8439
+8237
+9218
+10059
+8398
+Failure Rate: 20
+9275
+9273
+9070
+11224
+7858
+Failure Rate: 25
+5997
+9589
+6805
+9606
+9579
+Failure Rate: 30
+10225
+7974
+15162
+4974
+9044

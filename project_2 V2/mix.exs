@@ -8,7 +8,7 @@ defmodule Gossip.MixProject do
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      escript: [{:main_module, Gossip.Proj2}, {:app, :project_2}, {:name, "project2"}]
+      escript: [{:main_module, Proj2}, {:app, :project_2}, {:name, "my_program"}]
     ]
   end
 
