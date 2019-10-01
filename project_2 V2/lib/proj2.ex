@@ -31,7 +31,6 @@ defmodule Proj2 do
 		end
 	end
 	def main(args\\[]) do
-		script_mode = true
 		if check_args(args) do
 			[numNodes, topology, algorithm] = args
 			actors = Gossip.Topologies.build_topology(topology,String.to_integer(numNodes),algorithm)
@@ -40,11 +39,7 @@ defmodule Proj2 do
 			stop = Time.utc_now()
 			Gossip.Topologies.terminate_actors(actors)
 			time_taken = Time.diff(stop,start,:millisecond)
-			if script_mode do
-				IO.puts("#{time_taken}")
-			else
-				IO.puts("Time taken to achieve convergence is #{time_taken} milliseconds")
-			end
+			IO.puts("Time taken to achieve convergence is #{time_taken} milliseconds")
 		end
 	end
 end
