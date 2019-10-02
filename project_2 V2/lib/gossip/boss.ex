@@ -1,5 +1,6 @@
 defmodule Gossip.Boss do
 	def manage(actors,key\\0) do
+		# Tracks network convergence
 		if not Enum.any?(0..tuple_size(actors)-1, fn i -> elem(actors,i)["state"] == "alive" end) do
 			unaware_nodes = Gossip.Topologies.get_unaware(actors)
 			if not Enum.empty?(unaware_nodes) do
